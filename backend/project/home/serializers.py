@@ -1,9 +1,12 @@
 from rest_framework import serializers
 from .models import *
 
-
-class UserSerializer(serializers.ModelSerializer):
-    
+class TrafficReportSerializer(serializers.ModelSerializer):
     class Meta:
-        model=User
+        model = TrafficReport
+        fields = '__all__'
+
+class TrafficDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrafficData
         fields = '__all__'
