@@ -51,3 +51,8 @@ class TrafficReportViewSet(viewsets.ModelViewSet):
 class TrafficDataViewSet(viewsets.ModelViewSet):
     queryset = TrafficData.objects.all().order_by('-timestamp')
     serializer_class = TrafficDataSerializer
+
+@api_view(['GET'])
+def report_summary(request):
+    summary = TrafficReport.objects.values('report_type').annotate(total=Count('id'))
+    return Response(summary)
