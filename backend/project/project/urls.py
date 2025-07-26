@@ -26,7 +26,10 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from home.views import TrafficReportViewSet, TrafficDataViewSet
+from home.views import TrafficReportViewSet, TrafficDataViewSet, TrafficCongestionAPIView
+from django.urls import path
+
+
 
 router = DefaultRouter()
 router.register(r'reports', TrafficReportViewSet)
@@ -35,4 +38,6 @@ router.register(r'traffic', TrafficDataViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path("api/traffic/", TrafficCongestionAPIView.as_view(), name="traffic-congestion"),
 ]
+

@@ -52,7 +52,38 @@ class TrafficDataViewSet(viewsets.ModelViewSet):
     queryset = TrafficData.objects.all().order_by('-timestamp')
     serializer_class = TrafficDataSerializer
 
-@api_view(['GET'])
-def report_summary(request):
-    summary = TrafficReport.objects.values('report_type').annotate(total=Count('id'))
-    return Response(summary)
+# @api_view(['GET'])
+# def report_summary(request):
+#     summary = TrafficReport.objects.values('report_type').annotate(total=Count('id'))
+#     return Response(summary)
+
+ 
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser
+from .yolo_utils import detect_traffic_congestion
+import tempfile
+from rest_framework.permissions import AllowAny
+
+class TrafficCongestionAPIView(APIView):
+    permission_classes=[AllowAny]
+    parser_classes = [MultiPartParser]
+
+    def post(self, request):
+        video_file = request.FILES.get("video")
+        if not video_file:
+            return Response({"error": "No video uploaded."}, status=400)
+
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
+            for chunk in video_file.chunks():
+                tmp.write(chunk)
+            tmp_path = tmp.name
+
+        result = detect_traffic_congestion(tmp_path)
+        return Response(result)
+
+    def get(self, request):
+        # Optional: fallback video analysis
+        result = detect_traffic_congestion("sample_video.mp4")
+        return Response(result)
