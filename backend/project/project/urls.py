@@ -33,7 +33,7 @@ from django.urls import path
 
 router = DefaultRouter()
 router.register(r'reports', TrafficReportViewSet)
-router.register(r'traffic', TrafficDataViewSet)
+# router.register(r'traffic', TrafficDataViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

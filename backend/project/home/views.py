@@ -65,25 +65,120 @@ from rest_framework.parsers import MultiPartParser
 from .yolo_utils import detect_traffic_congestion
 import tempfile
 from rest_framework.permissions import AllowAny
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from .yolo_utils import detect_traffic_congestion  # <-- import your function
+from ultralytics import YOLO
+from deep_sort_realtime.deepsort_tracker import DeepSort
+
+import cv2
+import torch
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+
+# class TrafficCongestionAPIView(APIView):
+#     parser_classes = [MultiPartParser]  # to handle file uploads
+#     permission_classes=[AllowAny]
+#     def post(self, request):
+#         video_file = request.FILES.get('video')
+#         if not video_file:
+#             return Response({"error": "Video file is required."}, status=400)
+
+#         # Save uploaded video temporarily
+#         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
+#             for chunk in video_file.chunks():
+#                 tmp.write(chunk)
+#             tmp_path = tmp.name
+
+#         # Load YOLOv5 model (you can also switch to yolov5m, yolov5l, etc.)
+#         model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
+
+#         # Open video
+#         cap = cv2.VideoCapture(tmp_path)
+#         total_vehicles = 0
+#         vehicle_classes = ['car', 'bus', 'truck', 'motorbike']
+
+#         while cap.isOpened():
+#             ret, frame = cap.read()
+#             if not ret:
+#                 break
+
+#             # YOLO detection
+#             results = model(frame)
+#             detections = results.pandas().xyxy[0]
+#             vehicles = detections[detections['name'].isin(vehicle_classes)]
+#             total_vehicles += len(vehicles)
+
+#         cap.release()
+
+#         # Decide congestion level
+#         status = "High congestion" if total_vehicles > 50 else "Normal traffic"
+
+#         return Response({
+#             "vehicles_detected": total_vehicles,
+#             "status": status
+#         })
+
+
 
 class TrafficCongestionAPIView(APIView):
-    permission_classes=[AllowAny]
     parser_classes = [MultiPartParser]
+    permission_classes = [AllowAny]
 
     def post(self, request):
-        video_file = request.FILES.get("video")
+        video_file = request.FILES.get('video')
         if not video_file:
-            return Response({"error": "No video uploaded."}, status=400)
+            return Response({"error": "Video file is required."}, status=400)
 
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
             for chunk in video_file.chunks():
                 tmp.write(chunk)
             tmp_path = tmp.name
 
-        result = detect_traffic_congestion(tmp_path)
-        return Response(result)
+        try:
+            # Load YOLOv8 model
+            model = YOLO("yolov8n.pt")
+            tracker = DeepSort(max_age=30)
 
-    def get(self, request):
-        # Optional: fallback video analysis
-        result = detect_traffic_congestion("sample_video.mp4")
-        return Response(result)
+            cap = cv2.VideoCapture(tmp_path)
+            tracked_ids = set()
+            frame_limit = 300
+            frame_counter = 0
+            vehicle_classes = ["car", "bus", "truck", "motorbike"]
+
+            while cap.isOpened() and frame_counter < frame_limit:
+                ret, frame = cap.read()
+                if not ret:
+                    break
+
+                results = model(frame)[0]
+                detections = []
+
+                for box in results.boxes:
+                    class_id = int(box.cls[0])
+                    class_name = model.names[class_id]
+                    conf = float(box.conf[0])
+                    if class_name in vehicle_classes and conf > 0.5:
+                        x1, y1, x2, y2 = map(int, box.xyxy[0])
+                        detections.append(([x1, y1, x2 - x1, y2 - y1], conf, class_name))
+
+                tracks = tracker.update_tracks(detections, frame=frame)
+                for track in tracks:
+                    if track.is_confirmed():
+                        tracked_ids.add(track.track_id)
+
+                frame_counter += 1
+
+            cap.release()
+
+            total_vehicles = len(tracked_ids)
+            congestion_status = "High congestion" if total_vehicles > 50 else "Normal traffic"
+
+            return Response({
+                "vehicles_detected": total_vehicles,
+                "status": congestion_status
+            })
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
