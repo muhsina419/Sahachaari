@@ -1,47 +1,23 @@
-// import { Outlet } from "react-router"
-// import { useState } from "react"
-
-
-// function App() {
-// const [count,setCount] = useState(1)
-
-// const increment = ()=>{
-//   setCount(count+1)
-// }
-
-//   return (
-//     <div className="flex items-center justify-center flex-col h-screen w-screen">
-//     <div className="">Header</div>
-//     <Outlet/>
-//     <div className="">Footer</div>
-//     </div>
-//   )
-// }
-
-// export default App
-
-
-import { useEffect, useState } from "react";
-import { getReports } from "./api/api"; 
-import MapView from "./components/Mapview";
-import ReportForm from "./Reportform";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './components/Layout/Navbar';
+import Dashboard from './page/Dashboard';
+import Emergency from './page/Emergency';
+import ReportIncident from './page/ReportIncident';
+import Parking from './page/Parking';
+import Admin from './page/Admin';
 
 function App() {
-  const [reports, setReports] = useState([]);
-
-  const loadReports = () => {
-    getReports().then(res => setReports(res.data));
-  };
-
-  useEffect(() => {
-    loadReports();
-  }, []);
-
   return (
-    <div>
-      <h1>Smart Traffic Monitor</h1>
-      <ReportForm onSuccess={loadReports} />
-      <MapView reports={reports} />
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/emergency" element={<Emergency />} />
+        <Route path="/report" element={<ReportIncident />} />
+        <Route path="/parking" element={<Parking />} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
     </div>
   );
 }
