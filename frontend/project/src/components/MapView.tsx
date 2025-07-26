@@ -1,6 +1,9 @@
 import React, { useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle } from 'react-leaflet';
-import { TrafficData, EmergencyAlert, Incident, ParkingArea } from '../types';
+import type { TrafficData } from '../types';
+import type { EmergencyAlert } from '../types';
+import type { Incident } from '../types';
+import type { ParkingArea } from '../types';
 import StatusBadge from './Common/StatusBadge';
 import L from 'leaflet';
 import { Icon } from 'leaflet';

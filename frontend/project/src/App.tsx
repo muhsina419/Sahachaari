@@ -5,7 +5,7 @@ import Emergency from './page/Emergency';
 import ReportIncident from './page/ReportIncident';
 import Parking from './page/Parking';
 import Admin from './page/Admin';
-import HomePage from './page/Homepage';
+import HomePage from './page/HomePage';
 
 function App() {
   return (
