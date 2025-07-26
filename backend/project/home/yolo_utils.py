@@ -12,7 +12,7 @@ tracker = DeepSort(max_age=30)
 # Vehicle classes to track
 vehicle_classes = ["car", "bus", "truck", "motorbike"]
 
-def detect_traffic_congestion(video_path="highway.mp4", frame_limit=500):
+def detect_traffic_congestion(video_path="backend/project/WhatsApp Video 2025-07-26 at 06.35.59_7311e790.mp4", frame_limit=500):
     cap = cv2.VideoCapture(video_path)
     congestion_count = 0
     tracked_ids = set()
