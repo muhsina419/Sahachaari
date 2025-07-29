@@ -139,6 +139,6 @@ This project is licensed under the MIT License.
 
 ## 🙋‍♀️ Authors
 
-- [Muhsina](#)
-- [Abhinandhana](#)
-- [Akshaya](#)
+- [Muhsina](https://github.com/muhsina419)
+- [Abhinandana](https://github.com/abhinandu790)
+- [Akshaya](https://github.com/akshaya-smohan)
