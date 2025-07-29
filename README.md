@@ -72,21 +72,77 @@ Sahachaari is designed with scalability in mind, using a full-stack solution wit
 
 ```
 Sahachaari/
-├── frontend/                 # React + Tailwind frontend
-│   └── src/
-│       ├── components/
-│       ├── pages/
-│       └── App.tsx
-├── backend/                  # Django backend
-│   └── sahachaari/
-│       ├── views.py
-│       ├── models.py
-│       └── urls.py
-├── ai_module/                # YOLO/OpenCV traffic detection
-│   └── traffic_counter.py
-├── media/                    # Uploaded images
-├── requirements.txt
-├── README.md
+├── backend/
+│   ├── env/
+│   ├── project/
+│   │   ├── __pycache__/
+│   │   ├── __init__.py
+│   │   ├── asgi.py
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   ├── wsgi.py
+│   ├── home/
+│   │   ├── __pycache__/
+│   │   ├── migrations/
+│   │   ├── __init__.py
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── tests.py
+│   │   ├── views.py
+│   │   └── yolo_utils.py
+│   ├── db.sqlite3
+│   ├── manage.py
+│   ├── yolov5.pt
+│   ├── requirements.txt
+
+├── frontend/
+│   ├── project/
+│   │   ├── public/
+│   │   │   └── vite.svg
+│   │   ├── src/
+│   │   │   ├── api/
+│   │   │   │   └── apis.ts
+│   │   │   ├── assets/
+│   │   │   │   └── react.svg
+│   │   │   ├── components/
+│   │   │   │   ├── Common/
+│   │   │   │   ├── Dashboard/
+│   │   │   │   ├── Layout/
+│   │   │   │   └── MapView.tsx
+│   │   │   ├── data/
+│   │   │   │   └── mockData.ts
+│   │   │   ├── hooks/
+│   │   │   │   └── useLocation.ts
+│   │   │   ├── page/
+│   │   │   │   ├── Admin.tsx
+│   │   │   │   ├── Dashboard.tsx
+│   │   │   │   ├── Emergency.tsx
+│   │   │   │   ├── HomePage.tsx
+│   │   │   │   ├── Parking.tsx
+│   │   │   │   └── ReportIncident.tsx
+│   │   │   ├── types/
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── App.tsx
+│   │   │   │   ├── ReportForm.tsx
+│   │   │   │   ├── index.css
+│   │   │   │   ├── main.tsx
+│   │   │   │   └── vite-env.d.ts
+│   │   ├── .gitignore
+│   │   ├── README.md
+│   │   ├── index.html
+│   │   ├── package.json
+│   │   ├── package-lock.json
+│   │   ├── tsconfig.json
+│   │   ├── tsconfig.app.json
+│   │   ├── tsconfig.node.json
+│   │   └── vite.config.ts
+
+├── media/
+│   ├── README.md
+│   └── Sahachaari - CodeBees.pdf
+
 ```
 
 ## ⚙️ Installation & Setup
