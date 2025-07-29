@@ -64,9 +64,8 @@ Sahachaari is designed with scalability in mind, using a full-stack solution wit
 | **Frontend**      | React, TypeScript, Tailwind CSS            |
 | **Backend**       | Django, Django REST Framework              |
 | **AI Module**     | Python, YOLOv8, OpenCV                     |
-| **Maps**          | Leaflet.js, Google Maps API                |
-| **Database**      | SQLite / PostgreSQL                        |
-| **Deployment**    | Vercel (Frontend), Heroku / AWS (Backend)  |
+| **Maps**          | Leaflet.js              |
+| **Database**      | SQLite                         |
 
 ## 📁 Folder Structure
 
